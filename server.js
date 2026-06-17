@@ -5,11 +5,11 @@ const { Server } = require('socket.io');
 const cors = require('cors');
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:4200' }));
+app.use(cors({ origin: 'https://castitfe.vanitum.com' }));
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: 'http://localhost:4200', methods: ['GET', 'POST'] }
+  cors: { origin: 'https://castitfe.vanitum.com', methods: ['GET', 'POST'] }
 });
 
 const rooms = new Map(); // code -> { tv: socketId, phone: socketId | null }
