@@ -5,11 +5,28 @@ const { Server } = require('socket.io');
 const cors = require('cors');
 
 const app = express();
-app.use(cors({ origin: 'https://castitfe.vanitum.com' }));
+const allowedOrigins = (process.env.CORS_ORIGINS
+  || 'https://castitfe.vanitum.com,http://localhost:4200')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const corsOptions = {
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+    callback(new Error('Origin is not allowed'));
+  },
+  methods: ['GET', 'POST']
+};
+
+app.use(cors(corsOptions));
 
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: 'https://castitfe.vanitum.com', methods: ['GET', 'POST'] }
+  cors: corsOptions
 });
 
 const rooms = new Map(); // code -> { tv: socketId, phone: socketId | null }
